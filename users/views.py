@@ -53,7 +53,8 @@ def password_reset_confirm(request, uidb64=None, token=None,
                            token_generator=default_token_generator,
                            set_password_form=SetPasswordForm,
                            post_reset_redirect=None,
-                           extra_context=None):
+                           extra_context=None,
+                           backend='django.contrib.auth.backends.ModelBackend'):
     """
     View that checks the hash in a password reset link and presents a
     form for entering a new password.
@@ -79,7 +80,7 @@ def password_reset_confirm(request, uidb64=None, token=None,
             if form.is_valid():
                 form.save()
                 # special: the user is automatically logged in when the password is set.
-                login(request, user)
+                login(request, user, backend)
                 return HttpResponseRedirect(post_reset_redirect)
         else:
             form = set_password_form(user)
